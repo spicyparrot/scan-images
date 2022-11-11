@@ -1,0 +1,51 @@
+name: ☢ Image Scanning
+
+on:
+  workflow_dispatch:
+
+jobs:
+          
+  debugger:
+    name: Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load Test Images
+        run: |
+          docker pull python:3.4-alpine
+
+      - name: Install Trivy
+        run: |
+          echo "::group::Install Trivy"
+
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+          echo "::endgroup::"
+
+      - name: Scan Images with Trivy
+        run: |
+          echo "::group::Scan image by trivy"
+          
+          trivy image --format template --template "@templates/html.tpl" -o report.html --severity "HIGH,CRITICAL" --ignore-unfixed python:3.4-alpine
+          trivy image --format template --template "@templates/html_simple.tpl" -o $GITHUB_STEP_SUMMARY --severity "HIGH,CRITICAL" --ignore-unfixed python:3.4-alpine
+
+          echo "::endgroup::"
+
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: Trivy Report
+          path: report.html 
+
+      # Enable tmate debugging of manually-triggered workflows if the input option was provided
+      - name: Setup tmate session
+        if: failure()
+        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+        timeout-minutes: 25         
+

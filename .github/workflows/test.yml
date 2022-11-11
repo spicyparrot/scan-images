@@ -1,0 +1,21 @@
+name: 🧪 Test
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 🔬 Test Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: View Outputs
+        run: |
+          printf "Testing...."
+
+      - name: 🐛 Debugger
+        if: failure()
+        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+        timeout-minutes: 5

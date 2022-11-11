@@ -1,0 +1,58 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+
+    // Override the default shell (https://stackoverflow.com/questions/54810355/how-to-run-task-in-another-terminal-with-vscode-integrated-terminal)
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "wsl.exe"
+            }
+        }
+    },
+    "tasks": [
+        {
+            "label": "Git: Delete Remote & Local Tags",
+            "type": "shell",
+            "command": "git fetch --prune --prune-tags && export TAGS=$(git tag|grep  ${input:tagSearch}) && git push ${REMOTE_NAME:-origin} --delete $TAGS && git tag -d $TAGS",
+            "group": {
+              "kind": "build",
+              "isDefault": true
+            }
+        },
+        {
+            "label": "Docker: Build & Test Dependabot Action",
+            "type": "shell",
+            "command": "docker image build . -t test-action && docker container run --env GITHUB_REPOSITORY=check-dependabot --env GITHUB_REPOSITORY_OWNER=spicyparrot --env INPUT_GITHUB_PERSONAL_TOKEN=${input:githubToken} -- test-action",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Docker: Start Jupyter Notebook on localhost:8888",
+            "type": "shell",
+            "command": "export DOCKER_BUILDKIT=0 && docker image build -f docs/analysis/build/images/python.Dockerfile -t local-python . && docker run -it -p 8888:8888 -v $(pwd)/docs/analysis/notebooks:/opt/notebooks/ local-python",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+    ],
+    "inputs": [
+        {
+            "id": "tagSearch",
+            "description": "Tag Pattern:",
+            "default": "beta",
+            "type": "promptString"
+        },
+        {
+            "id": "githubToken",
+            "description": "GitHub Token:",
+            "type": "promptString"
+        }
+    ]
+}
