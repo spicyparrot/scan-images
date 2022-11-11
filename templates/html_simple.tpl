@@ -5,7 +5,7 @@
 {{- if . }}
   </head>
   <body>
-    <h1>{Trivy Report - {- escapeXML ( index . 0 ).Target }}</h1>
+    <h1>Trivy Report - {{- escapeXML ( index . 0 ).Target }}</h1>
     <table>
     {{- range . }}
       <tr class="group-header"><th colspan="6">{{ escapeXML .Type }}</th></tr>
