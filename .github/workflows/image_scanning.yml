@@ -31,7 +31,7 @@ jobs:
         id: images
         run: |
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
-          echo "matched='${IMAGES}'" >> $GITHUB_OUTPUT
+          echo "IMAGES=${IMAGES}" >> "$GITHUB_ENV"
 
       - name: Create Trivy Reports
         run: |
@@ -39,7 +39,7 @@ jobs:
           touch ${HTML_REPORT}
           export ERROR=false
           
-          for IMAGE in ${{ steps.images.outputs.matched }}; do
+          for IMAGE in $IMAGES; do
             # Full formatted report
             trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             echo "" >> ${HTML_REPORT}
