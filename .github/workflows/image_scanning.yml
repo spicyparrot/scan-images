@@ -63,15 +63,16 @@ jobs:
           # Set cumulative total issues
           echo "issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
 
-      - name: Summary Outputs  TODO - GREP THE TOTAL COUNT OF EACH SEVERITY
-        run: |
-          exit ${{ steps.scan.outputs.issues}}
-
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Trivy Reports
           path: trivy_image_reports.html
+
+      - name: Check Total Issues
+        run: |
+          echo ${{ steps.scan.outputs.issues}}
+          exit ${{ steps.scan.outputs.issues}}
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
