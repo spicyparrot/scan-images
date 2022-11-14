@@ -58,15 +58,15 @@ jobs:
       #  run: |
       #    cat report.txt|grep "CRITICAL: "
 
-      - name: Upload Reports
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: Trivy Reports
-          path: reports/*.html 
+      #- name: Upload Reports
+      #  uses: actions/upload-artifact@v3.1.1
+      #  with:
+      #    name: Trivy Reports
+      #    path: reports/*.html 
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       - name: Setup tmate session
         if: failure()
         uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
-        timeout-minutes: 25         
+        timeout-minutes: 5         
 
