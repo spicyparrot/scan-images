@@ -35,7 +35,7 @@ jobs:
           export HTML_REPORT=trivy_image_reports.html
           touch ${HTML_REPORT}
           export ERROR=false
-
+          
           for IMAGE in "python:3.4-alpine" "python:3.8.10-slim"; do
             # Full formatted report
             trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Trivy Reports
-          path: /tmp/trivy_image_reports.html
+          path: trivy_image_reports.html
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       - name: Setup tmate session
