@@ -41,6 +41,7 @@ jobs:
           export HTML_REPORT=trivy_image_reports.html
           touch ${HTML_REPORT}
           export TOTAL_ISSUES=0
+          export PURPLE='\033[0;35m'
           
           for IMAGE in $(cat toscan.txt); do
             # Full formatted report
@@ -57,15 +58,15 @@ jobs:
             trivy image -o table.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
             export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
-            printf "${IMAGE} Issues = ${ISSUES}\n"
-            printf "Cumulative Issues = ${TOTAL_ISSUES}\n"
+            printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
+            printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n"
             echo ${TOTAL_ISSUES} > issues.txt
           done;
 
           # Set cumulative total issues
           export TOTAL_ISSUES=$(cat issues.txt)
           echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
-          printf "Total Issues = ${TOTAL_ISSUES}\n"
+          printf "${PURPLE}Total Issues = ${TOTAL_ISSUES}\n"
           
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
@@ -74,9 +75,11 @@ jobs:
           path: trivy_image_reports.html
 
       - name: Check Total Issues
+        if: steps.scan.outputs.issues > 0
         run: |
-          echo ${{ steps.scan.outputs.issues}}
-          exit ${{ steps.scan.outputs.issues}}
+          export RED='\033[0;31m'
+          printf "${RED}${{ steps.scan.outputs.issues}} issues found"
+          exit 1
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
