@@ -48,9 +48,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           cat python1.txt >> $GITHUB_STEP_SUMMARY
 
-          trivy image -o reports/report.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
-          trivy image --format template --template "@templates/html.tpl" -o reports/python:3.8.10-slim_report.html --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
-          trivy image --format template --template "@templates/html_simple.tpl" -o python2.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          trivy image -o reports/report.txt --severity "HIGH,CRITICAL" --ignore-unfixed python:3.8.10-slim
+          trivy image --format template --template "@templates/html.tpl" -o reports/python:3.8.10-slim_report.html --severity "HIGH,CRITICAL" --ignore-unfixed python:3.8.10-slim
+          trivy image --format template --template "@templates/html_simple.tpl" -o python2.txt --severity "HIGH,CRITICAL" --ignore-unfixed python:3.8.10-slim
           echo "" >> $GITHUB_STEP_SUMMARY
           cat python2.txt >> $GITHUB_STEP_SUMMARY
 
