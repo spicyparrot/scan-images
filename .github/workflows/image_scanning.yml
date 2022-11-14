@@ -30,14 +30,11 @@ jobs:
           docker pull python:3.8.10-slim
           docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }}
 
-      - name: Setup Reporting
+      - name: Create Trivy Reports
         run: |
-          export HTML_REPORT=/tmp/trivy_image_reports.html
+          export HTML_REPORT=trivy_image_reports.html
           touch ${HTML_REPORT}
           export ERROR=false
-
-      - name: Trivy Reports
-        run: |
 
           for IMAGE in "python:3.4-alpine" "python:3.8.10-slim"; do
             # Full formatted report
