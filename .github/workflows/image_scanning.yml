@@ -64,6 +64,7 @@ jobs:
           done;
 
           # Set cumulative total issues
+          echo "Total Issues = $TOTAL_ISSUES"
           echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
 
       - name: Upload Reports
