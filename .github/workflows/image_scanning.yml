@@ -45,11 +45,12 @@ jobs:
           
           for IMAGE in $(cat toscan.txt); do
             # Full formatted report
-            trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+            trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed --exit-code 1 ${IMAGE}
             echo "" >> ${HTML_REPORT}
             cat full.txt >> ${HTML_REPORT}
+            
             # Reduce report for GitHub Step Summary
-            trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+            trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed --exit-code 1 ${IMAGE}
             echo "" >> $GITHUB_STEP_SUMMARY
             cat simple.txt >> $GITHUB_STEP_SUMMARY;
           done;
