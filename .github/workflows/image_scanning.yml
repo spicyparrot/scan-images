@@ -65,8 +65,8 @@ jobs:
 
           # Set cumulative total issues
           export TOTAL_ISSUES=$(cat issues.txt)
-          echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
           printf "${PURPLE}Total Issues = ${TOTAL_ISSUES}\n"
+          echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
           
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
