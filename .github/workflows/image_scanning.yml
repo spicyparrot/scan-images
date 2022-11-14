@@ -13,14 +13,6 @@ jobs:
     name: Scanning
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Load Test Images
-        run: |
-          docker pull ${{ inputs.image_grep }}
-          docker image list --format "{{.Repository}}:{{.Tag}}"|grep ubuntu
-
       - name: Install Trivy
         run: |
           sudo apt-get install wget apt-transport-https gnupg lsb-release
@@ -29,16 +21,38 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Load Test Images
+        run: |
+          docker pull ${{ inputs.image_grep }}
+          docker pull python:3.8.10-slim
+          docker image list --format "{{.Repository}}:{{.Tag}}"|grep ubuntu
+
       - name: Trivy Reports
         run: |
           mkdir reports
+          touch /tmp/summary.md
           export ERROR=true
 
+
           #TODO - use search and vectorise scanning. Collect all reports, concat reports in step summary and error if any images has issues
+          #trivy image --format template --template "@templates/html_simple.tpl" -o $GITHUB_STEP_SUMMARY --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+
+
+          # Vectorising test
+          trivy image -o reports/report.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          trivy image --format template --template "@templates/html.tpl" -o reports/${{ inputs.image_grep }}_report.html --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          trivy image --format template --template "@templates/html_simple.tpl" -o python1.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat python1.txt >> $GITHUB_STEP_SUMMARY
 
           trivy image -o reports/report.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
-          trivy image --format template --template "@templates/html.tpl" -o reports/formatted_report.html --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
-          trivy image --format template --template "@templates/html_simple.tpl" -o $GITHUB_STEP_SUMMARY --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          trivy image --format template --template "@templates/html.tpl" -o reports/python:3.8.10-slim_report.html --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          trivy image --format template --template "@templates/html_simple.tpl" -o python2.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${{ inputs.image_grep }}
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat python2.txt >> $GITHUB_STEP_SUMMARY
 
       #- name: Summary Outputs  TODO - GREP THE TOTAL COUNT OF EACH SEVERITY
       #  run: |
