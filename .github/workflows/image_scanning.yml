@@ -58,16 +58,16 @@ jobs:
             trivy image -o table.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//')
             export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
-            echo "${IMAGE} Issues = ${ISSUES}"
-            echo "Cumulative Issues = ${TOTAL_ISSUES}"
+            printf "${IMAGE} Issues = ${ISSUES}\n"
+            printf "Cumulative Issues = ${TOTAL_ISSUES}\n"
+            echo ${TOTAL_ISSUES} > issues.txt
           done;
 
           # Set cumulative total issues
-          echo "Last Issues = ${ISSUES}"
-          echo "Cumulative Issues = ${TOTAL_ISSUES}"
-          echo "Total Issues = ${TOTAL_ISSUES}"
+          export TOTAL_ISSUES=$(cat issues.txt)
           echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
-
+          printf "Total Issues = ${TOTAL_ISSUES}\n"
+          
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
         with:
