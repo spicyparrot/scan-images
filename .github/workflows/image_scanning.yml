@@ -25,11 +25,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Load Test Images
-        id: images
         run: |
           docker pull python:3.4-alpine
           docker pull python:3.8.10-slim
           docker pull python:3.8.10
+
+      - name: Grep for Images to Be Tested
+        id: images
+        run: |
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
           echo "matched=${IMAGES}" >> $GITHUB_OUTPUT
 
