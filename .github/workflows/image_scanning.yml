@@ -32,10 +32,9 @@ jobs:
 
       - name: Setup Reporting
         run: |
-          mkdir reports
           export HTML_REPORT=/tmp/trivy_image_reports.html
           touch ${HTML_REPORT}
-          export ERROR=true
+          export ERROR=false
 
       - name: Trivy Reports
         run: |
