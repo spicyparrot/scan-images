@@ -76,7 +76,7 @@ jobs:
 
       - name: Check Total Issues
         if: steps.scan.outputs.issues > 0
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6.3.3
         with:
           script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
 
