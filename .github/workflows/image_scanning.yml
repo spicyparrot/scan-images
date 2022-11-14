@@ -31,7 +31,7 @@ jobs:
         id: images
         run: |
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
-          echo "matched=${IMAGES}" >> $GITHUB_OUTPUT
+          echo "matched='${IMAGES}'" >> $GITHUB_OUTPUT
 
       - name: Create Trivy Reports
         run: |
