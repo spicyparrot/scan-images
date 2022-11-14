@@ -5,7 +5,7 @@ on:
     inputs:
       image_grep:
         type: text
-        default: python:3.4-alpine
+        default: python
 
 jobs:
           
@@ -29,6 +29,7 @@ jobs:
         run: |
           docker pull python:3.4-alpine
           docker pull python:3.8.10-slim
+          docker pull python:3.8.10
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
           echo "matched=${IMAGES}" >> $GITHUB_OUTPUT
 
