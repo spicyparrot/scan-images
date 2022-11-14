@@ -21,6 +21,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
       - name: Load Test Images
         run: |
           docker pull python:3.4-alpine
@@ -32,7 +35,6 @@ jobs:
         run: |
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
           echo $IMAGES > toscan.txt
-          
           #echo "IMAGES=${IMAGES}" >> "$GITHUB_ENV"
 
       - name: Create Trivy Reports
