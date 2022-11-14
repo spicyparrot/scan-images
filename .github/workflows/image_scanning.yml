@@ -56,8 +56,8 @@ jobs:
 
             # Add cumulative issues
             export ISSUES=$(cat full.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//')
-            echo $TOTAL_ISSUES
-            echo $ISSUES
+            echo "Total Issues = $TOTAL_ISSUES"
+            echo "Image Issues = $ISSUES"
             export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
 
           done;
