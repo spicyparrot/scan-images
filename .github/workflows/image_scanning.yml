@@ -58,7 +58,7 @@ jobs:
             trivy image -o table.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//')
             echo "Total Issues = $TOTAL_ISSUES"
-            echo "Image Issues = $ISSUES"
+            echo "${IMAGE} Issues = $ISSUES"
             export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
 
           done;
