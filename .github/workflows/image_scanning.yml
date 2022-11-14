@@ -35,29 +35,37 @@ jobs:
         run: |
           export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
           echo $IMAGES > toscan.txt
-          #echo "IMAGES=${IMAGES}" >> "$GITHUB_ENV"
 
       - name: Create Trivy Reports
+        id: scan
         run: |
           export HTML_REPORT=trivy_image_reports.html
           touch ${HTML_REPORT}
-          export ERROR=false
+          export TOTAL_ISSUES=0
           
           for IMAGE in $(cat toscan.txt); do
             # Full formatted report
-            trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed --exit-code 1 ${IMAGE}
+            trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             echo "" >> ${HTML_REPORT}
             cat full.txt >> ${HTML_REPORT}
             
             # Reduce report for GitHub Step Summary
-            trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed --exit-code 1 ${IMAGE}
+            trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
             echo "" >> $GITHUB_STEP_SUMMARY
             cat simple.txt >> $GITHUB_STEP_SUMMARY;
+
+            # Add cumulative issues
+            export ISSUES=$(cat full.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//')
+            export TOTAL_ISSUES=$(expr $TOTAL_ISSUES + $ISSUES)
+
           done;
 
-      #- name: Summary Outputs  TODO - GREP THE TOTAL COUNT OF EACH SEVERITY
-      #  run: |
-      #    cat report.txt|grep "CRITICAL: "
+          # Set cumulative total issues
+          echo "issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+
+      - name: Summary Outputs  TODO - GREP THE TOTAL COUNT OF EACH SEVERITY
+        run: |
+          exit ${{ steps.scan.outputs.issues}}
 
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
