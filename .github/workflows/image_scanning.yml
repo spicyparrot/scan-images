@@ -78,7 +78,8 @@ jobs:
         if: steps.scan.outputs.issues > 0
         run: |
           export RED='\033[0;31m'
-          printf "${RED}${{ steps.scan.outputs.issues}} issues found"
+          #printf "${RED}${{ steps.scan.outputs.issues}} issues found"
+          echo "${{ steps.scan.outputs.issues}} issues found"
           exit 1
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
