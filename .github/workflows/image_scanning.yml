@@ -56,12 +56,14 @@ jobs:
 
             # Add cumulative issues
             export ISSUES=$(cat full.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//')
-            export TOTAL_ISSUES=$(expr $TOTAL_ISSUES + $ISSUES)
+            echo $TOTAL_ISSUES
+            echo $ISSUES
+            export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
 
           done;
 
           # Set cumulative total issues
-          echo "issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+          echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
 
       - name: Upload Reports
         uses: actions/upload-artifact@v3.1.1
