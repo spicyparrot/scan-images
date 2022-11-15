@@ -1,7 +1,6 @@
 name: 🧪 Test
 on: 
   push:
-  workflow_dispatch:
 
 jobs:
   test:
@@ -20,5 +19,5 @@ jobs:
       - name: Scan Images
         uses: spicyparrot/scan-images@trunk
         with:
-          image_grep: ${{ inputs.image_grep }}
+          image_grep: "python"
 
