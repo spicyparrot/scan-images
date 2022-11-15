@@ -11,11 +11,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       
-      - name: View Outputs
+      - name: Load Test Images
         run: |
-          printf "Testing...."
+          docker pull python:3.4-alpine
+          docker pull python:3.8.10-slim
+          docker pull python:3.8.10
 
-      - name: 🐛 Debugger
-        if: failure()
-        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
-        timeout-minutes: 5
+      - name: Scan Images
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: ${{ inputs.image_grep }}
+
