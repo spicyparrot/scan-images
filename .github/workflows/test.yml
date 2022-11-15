@@ -1,23 +1,28 @@
 name: 🧪 Test
 on: 
   push:
-
+  workflow_dispatch:
+    
 jobs:
   test:
     name: 🔬 Test Action
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: 🛀 Checkout Self
         uses: actions/checkout@v3
       
-      - name: Load Test Images
+      - name: ⏬ Load Test Images
         run: |
           docker pull python:3.4-alpine
           docker pull python:3.8.10-slim
           docker pull python:3.8.10
 
-      - name: Scan Images
+      - name: ☢ Scan Python Matching Images
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "python"
 
+      - name: ☢ Scan No Matching Images
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: "bananaramallamadrama"
