@@ -15,14 +15,8 @@ env:
 
 jobs:
   test:
-    name: 🔬 Test Action
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Check Dependabot Alerts
-        run: |
-          printf "Do testing..."
+    name: 🔬 Run Test
+    uses: spicyparrot/scan-images/.github/workflows/test.yml@trunk
 
   create_tag:
     name: 🏷 Create Tag
@@ -44,4 +38,5 @@ jobs:
         shell: bash
         run: |
           printf "${PURPLE}Tag Generated = ${{steps.tag_version.outputs.new_tag}}\n"
+          echo "Tag Generated = ${{steps.tag_version.outputs.new_tag}}" >> $GITHUB_OUTPUT
        
