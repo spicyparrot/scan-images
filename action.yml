@@ -1,25 +1,77 @@
-name: "Check Dependabot Alerts"
-description: "Check how many open Dependabot alerts are present on the current repository."
+name: "Scan Docker Images"
+description: "Scans multiple docker images based on a search pattern using the Trivy image scanner"
 author: "Craig Bath"
 branding:
   icon: "alert-circle"
   color: "purple"
 inputs:
-  github_personal_token:
-    description: "GitHub Personal Access Token"
-outputs:
-  total_alerts:
-    description: "Total Open Alerts"
-  critical_alerts:
-    description: "Open Critical Alerts"
-  high_alerts:
-    description: "Open High Alertss"
-  moderate_alerts:
-    description: "Open Moderate Alerts"
-  low_alerts:
-    description: "Open Lower Alerts"
+  image_grep:
+    description: "Image name pattern "
+#outputs:
+  #total_issues:
+  #  description: "Total Open Alerts"
 
 runs:
-  using: composite
+  using: "composite"
   steps:
-  - name: Scan Dockerfile by hadolint
+    - name: 👩‍💻 Install Trivy
+      shell: bash
+      run: |
+        sudo apt-get install wget apt-transport-https gnupg lsb-release
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+        echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install trivy
+
+    - name: 🔍 Grep for Images
+      id: images
+      shell: bash
+      run: |
+        export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
+        echo $IMAGES > toscan.txt
+
+    - name: ☢ Scan Images
+      id: scan
+      shell: bash
+      run: |
+        export HTML_REPORT=trivy_image_reports.html
+        touch ${HTML_REPORT}
+        export TOTAL_ISSUES=0
+        export PURPLE='\033[0;35m'
+        
+        for IMAGE in $(cat toscan.txt); do
+          # Full formatted report
+          trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          echo "" >> ${HTML_REPORT}
+          cat full.txt >> ${HTML_REPORT}
+          
+          # Reduce report for GitHub Step Summary
+          trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat simple.txt >> $GITHUB_STEP_SUMMARY;
+
+          # Add cumulative issues
+          trivy image -o table.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
+          export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
+          printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
+          printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n"
+          echo ${TOTAL_ISSUES} > issues.txt
+        done;
+
+        # Set cumulative total issues
+        export TOTAL_ISSUES=$(cat issues.txt)
+        printf "${PURPLE}Total Issues = ${TOTAL_ISSUES}\n"
+        echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
+        
+    - name: ⬆ Upload Reports
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: Trivy Reports
+        path: trivy_image_reports.html
+
+    - name: 📑 Check Total Issues
+      if: steps.scan.outputs.issues > 0
+      uses: actions/github-script@v6.3.3
+      with:
+        script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
