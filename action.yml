@@ -16,12 +16,12 @@ inputs:
 
   upload_reports:
     description: "Image grep pattern"
-    required: true
+    required: false
     default: 'true'
 
   exit_on_error:
     description: "Image grep pattern"
-    required: true
+    required: false
     default: 'true'
 
 outputs:
