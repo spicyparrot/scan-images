@@ -6,7 +6,24 @@ branding:
   color: "purple"
 inputs:
   image_grep:
-    description: "Image name pattern "
+    description: "Image grep pattern"
+    required: true
+
+  severities:
+    description: "Comma seperated list of severities to check for ('CRITICAL,HIGH, MEDIUM, LOW')"
+    required: false
+    default: 'HIGH,CRITICAL'
+
+  upload_reports:
+    description: "Image grep pattern"
+    required: true
+    default: 'true'
+
+  exit_on_error:
+    description: "Image grep pattern"
+    required: true
+    default: 'true'
+
 #outputs:
   #total_issues:
   #  description: "Total Open Alerts"
@@ -41,17 +58,17 @@ runs:
         
         for IMAGE in $(cat toscan.txt); do
           # Full formatted report
-          trivy image --format template --template "@templates/html.tpl" -o full.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          trivy image --format template --template "@templates/html.tpl" -o full.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
           echo "" >> ${HTML_REPORT}
           cat full.txt >> ${HTML_REPORT}
           
           # Reduce report for GitHub Step Summary
-          trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
           echo "" >> $GITHUB_STEP_SUMMARY
           cat simple.txt >> $GITHUB_STEP_SUMMARY;
 
           # Add cumulative issues
-          trivy image -o table.txt --severity "HIGH,CRITICAL" --ignore-unfixed ${IMAGE}
+          trivy image -o table.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
           export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
           export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
           printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
@@ -66,12 +83,13 @@ runs:
         
     - name: ⬆ Upload Reports
       uses: actions/upload-artifact@v3.1.1
+      if: ${{ inputs.upload_reports }} == 'true'
       with:
         name: Trivy Reports
         path: trivy_image_reports.html
 
     - name: 📑 Check Total Issues
-      if: steps.scan.outputs.issues > 0
+      if: (steps.scan.outputs.issues > 0) && (${{ inputs.exit_on_error }} == 'true')
       uses: actions/github-script@v6.3.3
       with:
         script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')

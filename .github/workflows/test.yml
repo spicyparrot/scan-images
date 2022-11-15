@@ -1,6 +1,6 @@
 name: 🧪 Test
 on: 
-  push:
+  #push:
   workflow_dispatch:
     
 jobs:
