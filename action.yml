@@ -47,6 +47,7 @@ runs:
       run: |
         export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
         echo $IMAGES > toscan.txt
+        cat toscan.txt
 
     - name: ☢ Scan Images
       id: scan
