@@ -5,7 +5,7 @@ on:
     
 jobs:
   test:
-    name: 🔬 Test Action
+    name: ☢ Test Scan
     runs-on: ubuntu-latest
     strategy:
       matrix:

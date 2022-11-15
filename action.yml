@@ -88,7 +88,7 @@ runs:
       uses: actions/upload-artifact@v3.1.1
       if: ${{ inputs.upload_reports }} == 'true'
       with:
-        name: Trivy Reports
+        name: Trivy Reports - ${{ inputs.image_grep }}
         path: trivy_image_reports.html
 
     - name: 📑 Check Total Issues
