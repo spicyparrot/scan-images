@@ -24,9 +24,10 @@ inputs:
     required: true
     default: 'true'
 
-#outputs:
-  #total_issues:
-  #  description: "Total Open Alerts"
+outputs:
+  total_issues:
+    description: "Total Number of Issues Found"
+    value: ${{ steps.scan.outputs.issues }}
 
 runs:
   using: "composite"
