@@ -18,11 +18,20 @@ jobs:
           docker pull python:3.8.10
 
       - name: ☢ Scan Python Matching Images
+        id: python
         uses: spicyparrot/scan-images@trunk
+        if: always()  
         with:
           image_grep: "python"
 
       - name: ☢ Scan No Matching Images
+        id: none
         uses: spicyparrot/scan-images@trunk
+        if: always()
         with:
           image_grep: "bananaramallamadrama"
+
+      - name: 🎌 Flag Scanning Errored Correctly
+        if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues > 0)
+        run: |
+          exit 1
