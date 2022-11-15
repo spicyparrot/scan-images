@@ -23,7 +23,8 @@ jobs:
         if: always()  
         with:
           image_grep: "python"
-
+          severities: "CRITICAL"
+          
       - name: ☢ Scan No Matching Images
         id: none
         uses: spicyparrot/scan-images@trunk
