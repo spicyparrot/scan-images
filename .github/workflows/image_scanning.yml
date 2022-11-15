@@ -22,6 +22,6 @@ jobs:
           docker pull python:3.8.10
 
       - name: Scan Images
-        uses: ./github/actions/scan
+        uses: ./.github/actions/scan
         with:
           image_grep: ${{ inputs.image_grep }}
