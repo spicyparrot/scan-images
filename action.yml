@@ -118,8 +118,14 @@ runs:
       run: |
         echo "Matched '0' in output yaml"
 
+    - name: 🐛 Debugging Outputs 3
+      shell: bash
+      if: ${{ steps.scan.outputs.issues }} != '0'
+      run: |
+        echo "Not Matched '0' in output yaml"
+
     - name: 📑 Check Total Issues
       if: ${{ steps.scan.outputs.issues }} != '0'
       uses: actions/github-script@v6.3.3
       with:
-        script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
+        script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
