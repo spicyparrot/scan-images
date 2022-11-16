@@ -82,6 +82,7 @@ runs:
           export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
           printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
           printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n"
+          cat table.txt
           echo '${TOTAL_ISSUES}' > issues.txt
         done;
 
