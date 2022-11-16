@@ -35,7 +35,7 @@ jobs:
           echo "${{ steps.python.outputs.total_issues }}"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
-      - name: Setup tmate session
-        if: always()
-        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
-        timeout-minutes: 15     
+      #- name: Setup tmate session
+      #  if: always()
+      #  uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+      #  timeout-minutes: 15     
