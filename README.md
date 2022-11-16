@@ -1,8 +1,16 @@
 # Scan Docker Images
 
-This is a composte action that uses the the excellent [Trivy](https://aquasecurity.github.io/trivy) by Aqua Security to scan in-memory docker images for security issues.
+This is a composite action that uses the the excellent [Trivy](https://aquasecurity.github.io/trivy) by Aqua Security to scan in-memory docker images for security issues.
 
 This can be used to flag security issues prior to pushing to an image registry, such as Docker Hub, to further improve a shift left development life cycle.
+
+## Key Features
+
+- Scans any in-memory image and just public images
+- Allows scanning prior to pushing
+- Scan multiple images in a single task
+- Generates a single report with the results of all images scanned
+- Parses out the total issues found to allow for error thresholding
 
 ## Requirements
 
