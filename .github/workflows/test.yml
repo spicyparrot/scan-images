@@ -8,6 +8,7 @@ jobs:
     name: ☢ Test Scan
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         greps: ['python', 'bananaramallamadrama']
     steps:
