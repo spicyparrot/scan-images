@@ -30,6 +30,12 @@ jobs:
           severities: "CRITICAL"
           
       - name: 🎌 Flag Scanning Errored Correctly
-        if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues > 0)
+        #if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues > 0)
         run: |
-          exit 1
+          echo "${{ steps.python.outputs.total_issues }}"
+
+      # Enable tmate debugging of manually-triggered workflows if the input option was provided
+      - name: Setup tmate session
+        if: always()
+        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+        timeout-minutes: 15     
