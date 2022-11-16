@@ -11,10 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         greps: ['bananaramallamadrama']
-    steps:
-      - name: 🛀 Checkout Self
-        uses: actions/checkout@v3
-      
+    steps:     
       - name: ⏬ Load Test Images
         run: |
           docker pull python:3.4-alpine
