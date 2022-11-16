@@ -10,7 +10,7 @@ inputs:
     required: true
 
   severities:
-    description: "Comma seperated list of severities to check for ('CRITICAL,HIGH, MEDIUM, LOW')"
+    description: "Comma separated list of severities to check for ('CRITICAL,HIGH, MEDIUM, LOW')"
     required: false
     default: 'HIGH,CRITICAL'
 
@@ -90,6 +90,11 @@ runs:
       with:
         name: Trivy Reports - ${{ inputs.image_grep }}
         path: trivy_image_reports.html
+
+    - name: 🐛 Debugging Outputs
+      shell: bash
+      run: |
+        echo "Output = ${{ steps.scan.outputs.issues}}"
 
     - name: 📑 Check Total Issues
       if: (steps.scan.outputs.issues != '0') && (${{ inputs.exit_on_error }} == 'true')
