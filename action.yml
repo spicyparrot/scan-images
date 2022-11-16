@@ -36,6 +36,7 @@ runs:
       uses: actions/checkout@v3
       with:
         repository: 'spicyparrot/scan-images'
+        path: /tmp/scanning
 
     - name: 👩‍💻 Install Trivy
       shell: bash
@@ -66,12 +67,12 @@ runs:
         
         for IMAGE in $(cat toscan.txt); do
           # Full formatted report
-          trivy image --format template --template "@templates/html.tpl" -o full.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
+          trivy image --format template --template "@/tmp/scanning/templates/html.tpl" -o full.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
           echo "" >> ${HTML_REPORT}
           cat full.txt >> ${HTML_REPORT}
           
           # Reduce report for GitHub Step Summary
-          trivy image --format template --template "@templates/html_simple.tpl" -o simple.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
+          trivy image --format template --template "@/tmp/scanning/templates/html_simple.tpl" -o simple.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
           echo "" >> $GITHUB_STEP_SUMMARY
           cat simple.txt >> $GITHUB_STEP_SUMMARY;
 
