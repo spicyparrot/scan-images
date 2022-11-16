@@ -100,14 +100,25 @@ runs:
     - name: 🐛 Debugging Outputs
       shell: bash
       run: |
-        echo "Output = ${{ steps.scan.outputs.issues}}"
+        echo "Output = ${{ steps.scan.outputs.issues }}"
         if [ '${{ steps.scan.outputs.issues}}' == '0' ]
         then
-            echo "Hey ${{ steps.scan.outputs.issues}} issues here"
+            echo "Hey ${{ steps.scan.outputs.issues }} issues here"
         fi
 
-    #- name: 📑 Check Total Issues
-    #  if: (steps.scan.outputs.issues != '0') && (${{ inputs.exit_on_error }} == 'true')
-    #  uses: actions/github-script@v6.3.3
-    #  with:
-    #    script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
+        if [ '${{ steps.scan.outputs.issues }}' != '0' ]
+        then
+            echo "Hey ${{ steps.scan.outputs.issues }} issues here"
+        fi
+
+    - name: 🐛 Debugging Outputs 2
+      shell: bash
+      if: '${{ steps.scan.outputs.issues }}' == '0'
+      run: |
+        echo "HI! dIS MANY ISSUES FOUND ${{ steps.scan.outputs.issues }}"
+
+    - name: 📑 Check Total Issues
+      if: '${{ steps.scan.outputs.issues }}' == '0'
+      uses: actions/github-script@v6.3.3
+      with:
+        script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
