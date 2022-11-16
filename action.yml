@@ -83,7 +83,7 @@ runs:
           printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
           printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n"
           cat table.txt
-          echo '${TOTAL_ISSUES}' > issues.txt
+          echo "${TOTAL_ISSUES}" > issues.txt
         done;
 
         # Set cumulative total issues
@@ -123,6 +123,18 @@ runs:
       if: ${{ steps.scan.outputs.issues }} != '0'
       run: |
         echo "Not Matched '0' in output yaml"
+
+    - name: 🐛 Debugging Outputs 3
+      shell: bash
+      if: ${{ steps.scan.outputs.issues }} == "0"
+      run: |
+        echo "Matched 0 double quotes"
+
+    - name: 🐛 Debugging Outputs 3
+      shell: bash
+      if: ${{ steps.scan.outputs.issues }} != "0"
+      run: |
+        echo "Not Matched 0 double quotes"
 
     - name: 📑 Check Total Issues
       if: ${{ steps.scan.outputs.issues }} != '0'
