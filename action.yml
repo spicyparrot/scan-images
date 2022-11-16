@@ -104,7 +104,7 @@ runs:
     - name: Setup tmate session
       if: always()
       uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
-      timeout-minutes: 15     
+      #timeout-minutes: 15     
 
 
     #- name: 📑 Check Total Issues
