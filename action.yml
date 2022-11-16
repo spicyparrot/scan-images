@@ -97,7 +97,7 @@ runs:
         echo "Output = ${{ steps.scan.outputs.issues}}"
         if [ '${{ steps.scan.outputs.issues}}' != '0' ]
         then
-            echo "Hey ${{ steps.scan.outputs.issues}} is a large number"
+            echo "Hey ${{ steps.scan.outputs.issues}} issues here"
         fi
 
     #- name: 📑 Check Total Issues
