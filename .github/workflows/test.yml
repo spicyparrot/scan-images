@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        greps: ['python', 'bananaramallamadrama']
+        greps: ['bananaramallamadrama']
     steps:
       - name: 🛀 Checkout Self
         uses: actions/checkout@v3

@@ -95,9 +95,20 @@ runs:
       shell: bash
       run: |
         echo "Output = ${{ steps.scan.outputs.issues}}"
+        if [ '${{ steps.scan.outputs.issues}}' != '0' ]
+        then
+            echo "Hey ${{ steps.scan.outputs.issues}} is a large number"
+        fi
 
-    - name: 📑 Check Total Issues
-      if: (steps.scan.outputs.issues != '0') && (${{ inputs.exit_on_error }} == 'true')
-      uses: actions/github-script@v6.3.3
-      with:
-        script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
+    # Enable tmate debugging of manually-triggered workflows if the input option was provided
+    - name: Setup tmate session
+      if: always()
+      uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+      timeout-minutes: 15     
+
+
+    #- name: 📑 Check Total Issues
+    #  if: (steps.scan.outputs.issues != '0') && (${{ inputs.exit_on_error }} == 'true')
+    #  uses: actions/github-script@v6.3.3
+    #  with:
+    #    script: core.setFailed('${{ steps.scan.outputs.issues}} issues found')
