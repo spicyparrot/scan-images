@@ -104,19 +104,19 @@ runs:
         echo "Output = ${{ steps.scan.outputs.issues }}"
         if [ '${{ steps.scan.outputs.issues }}' == '0' ]
         then
-            echo "'0' issues found -  ${{ steps.scan.outputs.issues }}"
+            echo "Matched '0' in bash"
         fi
 
         if [ '${{ steps.scan.outputs.issues }}' != '0' ]
         then
-            echo "Not '0' issues found - Hey ${{ steps.scan.outputs.issues }}"
+            echo "Not Matched '0' in bash"
         fi
 
     - name: 🐛 Debugging Outputs 2
       shell: bash
       if: ${{ steps.scan.outputs.issues }} == '0'
       run: |
-        echo "HI! ${{ steps.scan.outputs.issues }} found matching '0'"
+        echo "Matched '0' in output yaml"
 
     - name: 📑 Check Total Issues
       if: ${{ steps.scan.outputs.issues }} != '0'
