@@ -8,7 +8,7 @@ This can be used to flag security issues prior to pushing to an image registry, 
 
 ## Key Features
 
-- Scans any in-memory image and just public images
+- Scans any in-memory image and not just public images
 - Allows scanning prior to pushing
 - Scan multiple images in a single task
 - Generates a single report with the results of all images scanned
@@ -16,7 +16,7 @@ This can be used to flag security issues prior to pushing to an image registry, 
 
 ## Requirements
 
-- Images to be scan available in memory prior to scanning
+- Images to be scanned available in memory prior to scanning
 
 ## Example workflow
 
