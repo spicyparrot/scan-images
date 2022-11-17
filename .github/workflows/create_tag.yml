@@ -1,4 +1,4 @@
-name: 🏷 Create Tag
+name: Version Created
 on: 
   workflow_dispatch:
 
