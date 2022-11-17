@@ -1,5 +1,7 @@
 # Scan Docker Images
 
+[![Tests Passing](https://github.com/spicyparrot/scan-images/actions/workflows/create_tag.yml/badge.svg)](https://github.com/spicyparrot/scan-images/actions/workflows/create_tag.yml)
+
 This is a composite action that uses the the excellent [Trivy](https://aquasecurity.github.io/trivy) by Aqua Security to scan in-memory docker images for security issues.
 
 This can be used to flag security issues prior to pushing to an image registry, such as Docker Hub, to further improve a shift left development life cycle.
@@ -41,23 +43,23 @@ jobs:
         id: python
         with:
           image_grep: "python"
-          severities: "CRITICAL"   
+          severities: "CRITICAL,HIGH"   
 ```
 
 ### Inputs
 
-| Input  |  Required | Values  | Description  | 
-|---|---|---|---|
-| `image_grep`  | true  | Any string  | String pattern used to grep for all matching images to be scanned (e.g. "python")  |
-| `severities` | false  |   |   |
-| `upload_reports` |   |   |   |
-| `exit_on_error` |   |   |   |
+| Input  |  Required | Values  | Default | Description  | 
+|---|---|---|---|---|
+| `image_grep`  | true  | String  |   | String used to grep for all matching images to be scanned e.g. "python"
+| `severities` | false  | Comma separated list  | 'HIGH,CRITICAL'  | |
+| `upload_reports` | false  | true or false | true  | |
+| `exit_on_error` | false  | true or false  | true | |
 
 ### Outputs
 
 | Output                                             | Description                                        |
 |------------------------------------------------------|-----------------------------------------------|
-| `total_issues`  | The total number of issues for all matching images and severities    |
+| `issues`  | The total number of issues found    |
 
 
 ### GitHub Action Decorations
