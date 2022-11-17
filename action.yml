@@ -32,7 +32,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: 🦜 Checkout Templates
+    - name: 🦜 Checkout Scripts
       uses: actions/checkout@v3
       with:
         repository: 'spicyparrot/scan-images'
@@ -47,49 +47,12 @@ runs:
         sudo apt-get update
         sudo apt-get install trivy
 
-    - name: 🔍 Grep for Images
-      id: images
-      shell: bash
-      run: |
-        export IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${{ inputs.image_grep }})
-        echo $IMAGES > toscan.txt
-        cat toscan.txt
-
     - name: ☢ Scan Images
       id: scan
       shell: bash
+      working-directory: temp_scanning
       run: |
-        export HTML_REPORT=trivy_image_reports.html
-        touch ${HTML_REPORT}
-        export TOTAL_ISSUES=0
-        echo '0' > issues.txt
-        export PURPLE='\033[0;35m'
-        
-        for IMAGE in $(cat toscan.txt); do
-          # Full formatted report
-          trivy image --format template --template "@temp_scanning/templates/html.tpl" -o full.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
-          echo "" >> ${HTML_REPORT}
-          cat full.txt >> ${HTML_REPORT}
-          
-          # Reduce report for GitHub Step Summary
-          trivy image --format template --template "@temp_scanning/templates/html_simple.tpl" -o simple.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
-          echo "" >> $GITHUB_STEP_SUMMARY
-          cat simple.txt >> $GITHUB_STEP_SUMMARY;
-
-          # Add cumulative issues
-          trivy image -o table.txt --severity ${{ inputs.severities }} --ignore-unfixed ${IMAGE}
-          export ISSUES=$(cat table.txt |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
-          export TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
-          printf "${PURPLE}${IMAGE} Issues = ${ISSUES}\n"
-          printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n"
-          cat table.txt
-          echo "${TOTAL_ISSUES}" > issues.txt
-        done;
-
-        # Set cumulative total issues
-        export TOTAL_ISSUES=$(cat issues.txt)
-        printf "${PURPLE}Total Issues = ${TOTAL_ISSUES}\n"
-        echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
+        source scan.sh ${{ inputs.image_grep }} ${{ inputs.severities }}
         
     - name: ⬆ Upload Reports
       uses: actions/upload-artifact@v3.1.1
@@ -97,44 +60,6 @@ runs:
       with:
         name: Trivy Reports - ${{ inputs.image_grep }}
         path: trivy_image_reports.html
-
-    - name: 🐛 Debugging Outputs
-      shell: bash
-      run: |
-        echo "Output = ${{ steps.scan.outputs.issues }}"
-        if [ '${{ steps.scan.outputs.issues }}' == '0' ]
-        then
-            echo "Matched '0' in bash"
-        fi
-
-        if [ '${{ steps.scan.outputs.issues }}' != '0' ]
-        then
-            echo "Not Matched '0' in bash"
-        fi
-
-    - name: 🐛 Debugging Outputs 2
-      shell: bash
-      if: ${{ steps.scan.outputs.issues }} == '0'
-      run: |
-        echo "Matched '0' in output yaml"
-
-    - name: 🐛 Debugging Outputs 3
-      shell: bash
-      if: ${{ steps.scan.outputs.issues }} != '0'
-      run: |
-        echo "Not Matched '0' in output yaml"
-
-    - name: 🐛 Debugging Outputs 3
-      shell: bash
-      if: ${{ steps.scan.outputs.issues }} == "0"
-      run: |
-        echo "Matched 0 double quotes"
-
-    - name: 🐛 Debugging Outputs 3
-      shell: bash
-      if: ${{ steps.scan.outputs.issues }} != "0"
-      run: |
-        echo "Not Matched 0 double quotes"
 
     - name: 📑 Check Total Issues
       if: ${{ steps.scan.outputs.issues }} != '0'
