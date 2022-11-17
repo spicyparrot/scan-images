@@ -29,6 +29,7 @@ jobs:
       - name: 🚩 Set Job Output
         run: |
           echo "issues=${{ steps.python.outputs.issues }}" >> $GITHUB_OUTPUT
+          printf "${RED} Issues found -  ${{ steps.python.outputs.issues }}\n"
 
   none:
     name: 🍌 No Matching Images
@@ -44,6 +45,7 @@ jobs:
       - name: 🚩 Set Job Output
         run: |
           echo "issues=${{ steps.none.outputs.issues }}" >> $GITHUB_OUTPUT
+          printf "${RED} Issues found -  ${{ steps.none.outputs.issues }}\n"
 
   review:
     name: 🔍 Check Results
