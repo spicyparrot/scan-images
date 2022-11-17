@@ -48,6 +48,7 @@ jobs:
         with:
           image_grep: "spicyparrot"
           severities: "CRITICAL"
+          exit_on_error: false
 
   none:
     name: 🍌 No Matching Images
