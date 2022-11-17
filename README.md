@@ -51,9 +51,9 @@ jobs:
 | Input  |  Required | Values  | Default | Description  | 
 |---|---|---|---|---|
 | `image_grep`  | true  | String  |   | String used to grep for all matching images to be scanned e.g. "python"
-| `severities` | false  | Comma separated list  | 'HIGH,CRITICAL'  | |
-| `upload_reports` | false  | true or false | true  | |
-| `exit_on_error` | false  | true or false  | true | |
+| `severities` | false  | Comma separated list  | 'HIGH,CRITICAL' | List of severities to scan for
+| `upload_reports` | false  | true or false | true  | Option to be able to download html reports
+| `exit_on_error` | false  | true or false  | true | Return an error if any issues are found
 
 ### Outputs
 
@@ -63,3 +63,5 @@ jobs:
 
 
 ### GitHub Action Decorations
+
+![Drag Racing](Dragster.jpg)

@@ -16,7 +16,7 @@ jobs:
       - name: ⏬ Download Test Images
         run: |
           docker pull python:3.4-alpine
-          docker pull python:3.8.10-slim
+          #docker pull python:3.8.10-slim
 
       - name: ☢ Scan Images
         id: scan
