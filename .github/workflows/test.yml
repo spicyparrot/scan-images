@@ -2,7 +2,11 @@ name: 🧪 Test
 on: 
   workflow_dispatch:
   workflow_call:
-    
+
+env:
+  GREEN: '\033[0;32m'
+  RED: '\033[0;31m'
+
 jobs:
   python:
     name: 🐍 Python Images
@@ -43,6 +47,9 @@ jobs:
         uses: actions/github-script@v6.3.3
         with:
           script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
+
+      - name: 🙌 Pass Unit Test
+        run: printf "${GREEN}Unit tests have passed! ✅"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
