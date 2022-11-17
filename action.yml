@@ -63,9 +63,10 @@ runs:
 
     - name: ⚠ Add Warning Annotations
       if: steps.scan.outputs.issues > 0
-      uses: actions/github-script@v6.3.3
-      with:
-        script: core.setWarning('${{ steps.scan.outputs.issues }} issues found')
+      shell: bash
+      run: |
+        echo "::warning ::${{ steps.scan.outputs.issues }} issues found"
+
 
     - name: 📑 Check Total Issues
       if: (steps.scan.outputs.issues > 0) && (inputs.exit_on_error == 'true')
