@@ -1,0 +1,27 @@
+name: 🧪 Manual Test
+on: 
+  workflow_dispatch:
+
+env:
+  GREEN: '\033[0;32m'
+  RED: '\033[0;31m'
+
+jobs:
+  python:
+    name: 🐍 Python Images
+    runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
+    steps:     
+      - name: ⏬ Download Test Images
+        run: |
+          docker pull python:3.4-alpine
+          docker pull python:3.8.10-slim
+
+      - name: ☢ Scan Images
+        id: scan
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: "python"
+          severities: "CRITICAL"
+          exit_on_error: true
