@@ -52,7 +52,7 @@ runs:
       shell: bash
       working-directory: temp_scanning
       run: |
-        source scan.sh ${{ inputs.image_grep }} ${{ inputs.severities }}
+        source scan.sh "${{ inputs.image_grep }}" "${{ inputs.severities }}"
         
     - name: ⬆ Upload Reports
       uses: actions/upload-artifact@v3.1.1
