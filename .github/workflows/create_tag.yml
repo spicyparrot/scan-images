@@ -1,10 +1,6 @@
 name: 🏷 Create Tag
 on: 
   workflow_dispatch:
-    inputs:
-      tag_name:
-        description: Tag Name
-        type: string
 
 env:
   RED: '\033[0;31m'
