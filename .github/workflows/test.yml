@@ -24,7 +24,7 @@ jobs:
         with:
           image_grep: "python"
           severities: "CRITICAL"
-          exit_on_error: true
+          exit_on_error: false
 
   none:
     name: 🍌 No Matching Images
@@ -36,7 +36,6 @@ jobs:
         with:
           image_grep: "bananaramallamadrama"
           severities: "CRITICAL"
-          exit_on_error: false
 
   review:
     name: 🔍 Check Results
