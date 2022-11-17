@@ -52,3 +52,4 @@ printf "${YELLOW}Report Generated - ${HTML_REPORT}\n${WHITE}"
 printf "${RED}Issues found - ${TOTAL_ISSUES}\n${WHITE}"
 echo "${TOTAL_ISSUES}" > ${TOTAL_FILE}
 echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
+exit 0
