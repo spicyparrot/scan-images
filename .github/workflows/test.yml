@@ -11,6 +11,8 @@ jobs:
   python:
     name: 🐍 Python Images
     runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
     steps:     
       - name: ⏬ Download Test Images
         run: |
@@ -19,7 +21,7 @@ jobs:
           docker pull python:3.8.10
 
       - name: ☢ Scan Images
-        id: python
+        id: scan
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "python"
@@ -28,15 +30,17 @@ jobs:
       
       - name: 🚩 Set Job Output
         run: |
-          echo "issues=${{ steps.python.outputs.issues }}" >> $GITHUB_OUTPUT
-          printf "${RED} Issues found -  ${{ steps.python.outputs.issues }}\n"
+          echo "issues=${{ steps.scan.outputs.issues }}" >> $GITHUB_OUTPUT
+          printf "${RED} Issues found -  ${{ steps.scan.outputs.issues }}\n"
 
   none:
     name: 🍌 No Matching Images
     runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
     steps:     
       - name: ☢ Scan Images
-        id: none
+        id: scan
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "bananaramallamadrama"
@@ -44,8 +48,8 @@ jobs:
 
       - name: 🚩 Set Job Output
         run: |
-          echo "issues=${{ steps.none.outputs.issues }}" >> $GITHUB_OUTPUT
-          printf "${RED} Issues found -  ${{ steps.none.outputs.issues }}\n"
+          echo "issues=${{ steps.scan.outputs.issues }}" >> $GITHUB_OUTPUT
+          printf "${RED} Issues found -  ${{ steps.scan.outputs.issues }}\n"
 
   review:
     name: 🔍 Check Results
