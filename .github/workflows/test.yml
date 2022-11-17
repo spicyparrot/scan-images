@@ -47,6 +47,9 @@ jobs:
     outputs:
       issues: ${{ steps.scan.outputs.issues }}
     steps:
+      - name: 🛀 Checkout Self
+        uses: actions/checkout@v3
+        
       - name: 🏗 Build Custom Images
         run: |
           cd test/node/
