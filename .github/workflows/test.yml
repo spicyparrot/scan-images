@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        greps: ['bananaramallamadrama']
+        greps: ['python','bananaramallamadrama']
     steps:     
       - name: ⏬ Load Test Images
         run: |
@@ -27,12 +27,13 @@ jobs:
           severities: "CRITICAL"
           
       - name: 🎌 Flag Scanning Errored Correctly
-        #if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues > 0)
+        if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues == 0)
         run: |
-          echo "${{ steps.python.outputs.total_issues }}"
+          echo "Python Issues - ${{ steps.python.outputs.total_issues }}"
+          echo "No Matched Issues - ${{ steps.none.outputs.total_issues }}"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
-      - name: Setup tmate session
-        if: always()
-        uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
-        timeout-minutes: 15     
+      #- name: Setup tmate session
+      #  if: always()
+      #  uses: mxschmitt/action-tmate@v3     #https://github.com/marketplace/actions/debugging-with-tmate  + https://blog.fleetdm.com/4-tips-for-github-actions-usability-2-debugging-4c0c920adfde
+      #  timeout-minutes: 15     
