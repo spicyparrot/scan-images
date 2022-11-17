@@ -68,12 +68,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [python, custom, none]
     steps:
-      - name: ✅ Check Outputs
-        run: |
-          echo "Python Image Issues - ${{ needs.python.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
-          echo "Custom Image Issues -  ${{ needs.custom.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
-          echo "Empty Match Issues -  ${{ needs.none.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
-
       - name: 🎌 Ensure Issues Found
         if: (needs.python.outputs.issues < 1) || (needs.none.outputs.issues > 0)
         uses: actions/github-script@v6.3.3
