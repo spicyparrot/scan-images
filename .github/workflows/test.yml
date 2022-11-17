@@ -41,9 +41,14 @@ jobs:
     name: 🔍 Check Results
     runs-on: ubuntu-latest
     needs: [python, none]
-    steps:               
+    steps:
+      - name: ✅ Check Outputs
+        run: |
+          printf "${RED} Python issues found -  ${{ needs.python.outputs.issues }}"
+          printf "${RED} Empty match issues found -  ${{ needs.not.outputs.issues }}"
+
       - name: 🎌 Ensure Issues Found
-        if: (needs.python.outputs.issues == 0) || (needs.none.outputs.issues > 0)
+        if: (needs.python.outputs.issues <= 0) || (needs.none.outputs.issues > 0)
         uses: actions/github-script@v6.3.3
         with:
           script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
@@ -51,8 +56,6 @@ jobs:
       - name: 🙌 Pass Unit Test
         run: |
           printf "${GREEN}Tests have passed! ✅"
-          printf "${RED} Python issues found -  ${{ needs.python.outputs.issues }}"
-          printf "${RED} Empty match issues found -  ${{ needs.not.outputs.issues }}"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
