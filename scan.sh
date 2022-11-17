@@ -48,8 +48,8 @@ for IMAGE in $IMAGES; do
 done;
 
 # Output total images
+echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
+#echo "${TOTAL_ISSUES}" > ${TOTAL_FILE}
 printf "${YELLOW}Report Generated - ${HTML_REPORT}\n${WHITE}"
 printf "${RED}Issues found - ${TOTAL_ISSUES}\n${WHITE}"
-echo "${TOTAL_ISSUES}" > ${TOTAL_FILE}
-echo "issues=${TOTAL_ISSUES}" >> $GITHUB_OUTPUT
-exit 0
+#exit 0
