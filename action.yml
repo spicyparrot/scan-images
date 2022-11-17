@@ -19,11 +19,6 @@ inputs:
     required: false
     default: 'true'
 
-  exit_on_error:
-    description: "Image grep pattern"
-    required: false
-    default: 'true'
-
 outputs:
   total_issues:
     description: "Total Number of Issues Found"

@@ -36,6 +36,7 @@ jobs:
     name: 🔍 Check Results
     runs-on: ubuntu-latest
     needs: [python, none]
+    if: always()
     steps:               
       - name: 🎌 Ensure 1 Pass and 1 Fail
         if: (needs.python.result =='success') || (needs.none.result !='success')
