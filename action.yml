@@ -54,7 +54,7 @@ runs:
       if: ${{ inputs.upload_reports }} == 'true'
       with:
         name: Trivy Reports - ${{ inputs.image_grep }}
-        path: trivy_image_reports.html
+        path: /tmp/trivy_image_reports.html
 
     - name: 📑 Check Total Issues
       if: steps.scan.outputs.issues > 0
