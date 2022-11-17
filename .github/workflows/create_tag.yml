@@ -21,7 +21,7 @@ jobs:
     steps:    
       - name: Generate Tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0    #https://github.com/marketplace/actions/github-tag
+        uses: mathieudutour/github-tag-action@v6.1    #https://github.com/marketplace/actions/github-tag
         with:
           github_token: ${{ github.token }}
           tag_prefix: "v"
@@ -33,6 +33,6 @@ jobs:
       - name: Tag Details
         shell: bash
         run: |
-          printf "${PURPLE}Tag Generated = ${{steps.tag_version.outputs.new_tag}}\n"
-          echo "Tag Generated = ${{steps.tag_version.outputs.new_tag}}" >> $GITHUB_OUTPUT
+          printf "${PURPLE}Tag Generated = ${{ steps.tag_version.outputs.new_tag }}\n"
+          echo "Tag Generated = ${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_OUTPUT
        
