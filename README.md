@@ -64,4 +64,4 @@ jobs:
 
 ### GitHub Action Decorations
 
-![Drag Racing](Dragster.jpg)
+![Actions Summary](docs/screenshots/actions_outputs.jpg)
