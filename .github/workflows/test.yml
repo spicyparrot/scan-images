@@ -28,6 +28,27 @@ jobs:
           severities: "CRITICAL"
           exit_on_error: false
       
+  custom:
+    name: 🦜 Custom Images
+    runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
+    steps:
+      - name: 🛀 Checkout Self
+        uses: actions/checkout@v3
+
+      - name: 🏗 Build Custom Images
+        run: |
+          cd test/node/
+          docker-compose build
+
+      - name: ☢ Scan Images
+        id: scan
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: "spicyparrot"
+          severities: "CRITICAL,HIGH"
+
   none:
     name: 🍌 No Matching Images
     runs-on: ubuntu-latest
@@ -39,27 +60,6 @@ jobs:
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "bananaramallamadrama"
-          severities: "CRITICAL"
-
-  custom:
-    name: 🦜 Custom Images
-    runs-on: ubuntu-latest
-    outputs:
-      issues: ${{ steps.scan.outputs.issues }}
-    steps:
-      - name: 🛀 Checkout Self
-        uses: actions/checkout@v3
-        
-      - name: 🏗 Build Custom Images
-        run: |
-          cd test/node/
-          docker-compose build
-
-      - name: ☢ Scan Images
-        id: scan
-        uses: spicyparrot/scan-images@trunk
-        with:
-          image_grep: "spicyparrot"
           severities: "CRITICAL"
 
   review:

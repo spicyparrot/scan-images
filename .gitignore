@@ -5,6 +5,7 @@ build
 
 # Access keys & Secrets
 .env
+!test/node/.env
 **/secrets
 **.pem
 **.ppk
