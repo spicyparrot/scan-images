@@ -1,0 +1,22 @@
+#Setup
+version: '3.8'  
+
+x-defaults: &defaults
+    command: "npm start"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #env_file:
+    #  - .env
+
+services:
+  node-server:
+    <<: *defaults
+    image:  spicyparrot.docker.com:node-websocket-server-1234abc
+    healthcheck:
+      test: curl --fail -s http://localhost:${WS_SERVER_PORT_INT}/heartbeat || exit 1
+
+secrets:
+  s3-credentials:
+    file: ./secrets/credentials
+    name: ${ENVIRONMENT}-s3-credentials-${SECRETS_HASH}

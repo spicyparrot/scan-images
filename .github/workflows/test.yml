@@ -41,6 +41,24 @@ jobs:
           image_grep: "bananaramallamadrama"
           severities: "CRITICAL"
 
+  custom:
+    name: 🦜 Custom Images
+    runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
+    steps:
+      - name: 🏗 Build Custom Images
+        run: |
+          cd test/node/
+          docker-compose build
+
+      - name: ☢ Scan Images
+        id: scan
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: "spicyparrot"
+          severities: "CRITICAL"
+
   review:
     name: 🔍 Check Results
     runs-on: ubuntu-latest
@@ -48,8 +66,9 @@ jobs:
     steps:
       - name: ✅ Check Outputs
         run: |
-          echo "$Python issues found -  ${{ needs.python.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
-          echo "$Empty match issues found -  ${{ needs.none.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
+          echo "Python Image Issues - ${{ needs.python.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
+          echo "Custom Image Issues -  ${{ needs.custom.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
+          echo "Empty Match Issues -  ${{ needs.none.outputs.issues }}" >> $GITHUB_STEP_SUMMARY
 
       - name: 🎌 Ensure Issues Found
         if: (needs.python.outputs.issues < 1) || (needs.none.outputs.issues > 0)
