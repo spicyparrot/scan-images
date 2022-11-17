@@ -50,7 +50,10 @@ jobs:
           script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
 
       - name: 🙌 Pass Unit Test
-        run: printf "${GREEN}Tests have passed! ✅"
+        run: |
+          printf "${GREEN}Tests have passed! ✅"
+          printf "${RED} Python issues found -  ${{ needs.python.outputs.issues }}"
+          printf "${RED} Empty match issues found -  ${{ needs.not.outputs.issues }}"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
