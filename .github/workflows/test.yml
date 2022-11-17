@@ -25,17 +25,25 @@ jobs:
           image_grep: "python"
           severities: "CRITICAL"
           exit_on_error: false
+      
+      - name: 🚩 Set Job Output
+        run: |
+          echo "issues=${{ steps.python.outputs.issues }}" >> $GITHUB_OUTPUT
 
   none:
     name: 🍌 No Matching Images
     runs-on: ubuntu-latest
     steps:     
       - name: ☢ Scan Images
-        id: python
+        id: none
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "bananaramallamadrama"
           severities: "CRITICAL"
+
+      - name: 🚩 Set Job Output
+        run: |
+          echo "issues=${{ steps.none.outputs.issues }}" >> $GITHUB_OUTPUT
 
   review:
     name: 🔍 Check Results
@@ -44,8 +52,8 @@ jobs:
     steps:
       - name: ✅ Check Outputs
         run: |
-          printf "${RED} Python issues found -  ${{ needs.python.outputs.issues }}"
-          printf "${RED} Empty match issues found -  ${{ needs.not.outputs.issues }}"
+          printf "${RED} Python issues found -  ${{ needs.python.outputs.issues }}\n"
+          printf "${RED} Empty match issues found -  ${{ needs.none.outputs.issues }}\n"
 
       - name: 🎌 Ensure Issues Found
         if: (needs.python.outputs.issues < 1) || (needs.none.outputs.issues > 0)
