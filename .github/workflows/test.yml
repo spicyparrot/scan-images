@@ -49,7 +49,7 @@ jobs:
           script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
 
       - name: 🙌 Pass Unit Test
-        run: printf "${GREEN}Unit tests have passed! ✅"
+        run: printf "${GREEN}Tests have passed! ✅"
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
