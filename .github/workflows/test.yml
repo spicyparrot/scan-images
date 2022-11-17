@@ -5,7 +5,7 @@ on:
     
 jobs:
   python:
-    name: ☢ Python Images
+    name: 🐍 Python Images
     runs-on: ubuntu-latest
     steps:     
       - name: ⏬ Download Test Images
@@ -22,7 +22,7 @@ jobs:
           severities: "CRITICAL"
 
   none:
-    name: ☢ No Matching Images
+    name: 🍌 No Matching Images
     runs-on: ubuntu-latest
     steps:     
       - name: ☢ Scan Images
