@@ -35,7 +35,7 @@ for IMAGE in $IMAGES; do
   cat ${FULL_FILE}  >> ${HTML_REPORT}
 
   # Reduced report for GitHub Step Summary
-  trivy image --format template --template "@templates/html.tpl" -o ${SLIM_FILE}  --severity ${SEVERITIES} --ignore-unfixed ${IMAGE}
+  trivy image --format template --template "@templates/html_simple.tpl" -o ${SLIM_FILE}  --severity ${SEVERITIES} --ignore-unfixed ${IMAGE}
   echo "" >> $GITHUB_STEP_SUMMARY
   cat ${SLIM_FILE}  >> $GITHUB_STEP_SUMMARY;
 
