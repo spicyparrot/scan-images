@@ -62,7 +62,7 @@ jobs:
   review:
     name: 🔍 Check Results
     runs-on: ubuntu-latest
-    needs: [python, none]
+    needs: [python, custom, none]
     steps:
       - name: ✅ Check Outputs
         run: |
