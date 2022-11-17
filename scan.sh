@@ -30,17 +30,17 @@ for IMAGE in $IMAGES; do
   printf "${YELLOW}Scanning ${IMAGE}...\n${WHITE}"
 
   # Full formatted report
-  trivy image --format template --template "@templates/html.tpl" -o ${FULL_FILE} --severity ${SEVERITIES} --ignore-unfixed ${IMAGE}
+  trivy image --severity ${SEVERITIES} --format template --template "@templates/html.tpl" -o ${FULL_FILE} ${IMAGE}
   echo "" >> ${HTML_REPORT}
   cat ${FULL_FILE}  >> ${HTML_REPORT}
 
   # Reduced report for GitHub Step Summary
-  trivy image --format template --template "@templates/html_simple.tpl" -o ${SLIM_FILE}  --severity ${SEVERITIES} --ignore-unfixed ${IMAGE}
+  trivy image --severity ${SEVERITIES} --format template --template "@templates/html_simple.tpl" -o ${SLIM_FILE} ${IMAGE}
   echo "" >> $GITHUB_STEP_SUMMARY
   cat ${SLIM_FILE}  >> $GITHUB_STEP_SUMMARY;
 
   # Add cumulative issues
-  trivy image -o ${TAB_FILE} --severity ${SEVERITIES} --ignore-unfixed ${IMAGE}
+  trivy image --severity ${SEVERITIES} -o ${TAB_FILE} ${IMAGE}
   ISSUES=$(cat ${TAB_FILE} |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
   TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
 

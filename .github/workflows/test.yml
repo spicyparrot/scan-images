@@ -47,7 +47,7 @@ jobs:
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: "spicyparrot"
-          severities: "CRITICAL,HIGH"
+          severities: "CRITICAL"
 
   none:
     name: 🍌 No Matching Images
