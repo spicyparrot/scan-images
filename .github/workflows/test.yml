@@ -4,15 +4,11 @@ on:
   workflow_call:
     
 jobs:
-  test:
-    name: ☢ Test Scan
+  python:
+    name: ☢ Python Images
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        greps: ['python','bananaramallamadrama']
     steps:     
-      - name: ⏬ Load Test Images
+      - name: ⏬ Download Test Images
         run: |
           docker pull python:3.4-alpine
           docker pull python:3.8.10-slim
@@ -21,16 +17,31 @@ jobs:
       - name: ☢ Scan Images
         id: python
         uses: spicyparrot/scan-images@trunk
-        if: always()  
         with:
-          image_grep: "${{ matrix.greps }}"
+          image_grep: "python"
           severities: "CRITICAL"
-          
-      - name: 🎌 Flag Scanning Errored Correctly
-        if: (steps.python.outputs.total_issues > 0) || (steps.none.outputs.total_issues == 0)
-        run: |
-          echo "Python Issues - ${{ steps.python.outputs.total_issues }}"
-          echo "No Matched Issues - ${{ steps.none.outputs.total_issues }}"
+
+  none:
+    name: ☢ No Matching Images
+    runs-on: ubuntu-latest
+    steps:     
+      - name: ☢ Scan Images
+        id: python
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: "bananaramallamadrama"
+          severities: "CRITICAL"
+
+  review:
+    name: 🔍 Check Results
+    runs-on: ubuntu-latest
+    needs: [python, none]
+    steps:               
+      - name: 🎌 Ensure 1 Pass and 1 Fail
+        if: (needs.python.result =='success') || (needs.none.result !='success')
+        uses: actions/github-script@v6.3.3
+        with:
+          script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
 
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       #- name: Setup tmate session
