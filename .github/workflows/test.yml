@@ -48,7 +48,7 @@ jobs:
           printf "${RED} Empty match issues found -  ${{ needs.not.outputs.issues }}"
 
       - name: 🎌 Ensure Issues Found
-        if: (needs.python.outputs.issues <= 0) || (needs.none.outputs.issues > 0)
+        if: (needs.python.outputs.issues < 1) || (needs.none.outputs.issues > 0)
         uses: actions/github-script@v6.3.3
         with:
           script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
