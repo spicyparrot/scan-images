@@ -53,6 +53,7 @@ runs:
       working-directory: temp_scanning
       run: |
         ./scan.sh "${{ inputs.image_grep }}" "${{ inputs.severities }}"
+        cat $GITHUB_OUTPUT
         
     - name: ⬆ Upload Reports
       uses: actions/upload-artifact@v3.1.1
@@ -62,7 +63,7 @@ runs:
         path: trivy_image_reports.html
 
     - name: 📑 Check Total Issues
-      if: ${{ steps.scan.outputs.issues }} > 0
+      if: steps.scan.outputs.issues > 0
       uses: actions/github-script@v6.3.3
       with:
         script: core.setFailed('${{ steps.scan.outputs.issues }} issues found')
