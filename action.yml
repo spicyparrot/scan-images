@@ -37,6 +37,7 @@ runs:
       with:
         repository: 'spicyparrot/scan-images'
         path: temp_scanning
+        ref: 'trunk'
 
     - name: 👩‍💻 Install Trivy
       shell: bash
