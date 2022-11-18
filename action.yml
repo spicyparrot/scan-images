@@ -72,4 +72,4 @@ runs:
       if: (steps.scan.outputs.issues > 0) && (inputs.exit_on_error == 'true')
       uses: actions/github-script@v6.3.3
       with:
-        script: core.setFailed('☢ ${{ steps.scan.outputs.issues }} security issues found in images matching '${{ inputs.image_grep }}' for severities ${{ inputs.severities }}')
+        script: core.setFailed("☢ ${{ steps.scan.outputs.issues }} security issues found in images matching '${{ inputs.image_grep }}' for severities ${{ inputs.severities }}")
