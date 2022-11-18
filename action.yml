@@ -65,8 +65,7 @@ runs:
       if: steps.scan.outputs.issues > 0
       shell: bash
       run: |
-        echo "::warning ::☢ ${{ steps.scan.outputs.issues }} security issues found in images matching '${{ inputs.image_grep }}'"
-
+        echo "::warning ::☢ ${{ steps.scan.outputs.issues }} security issues found in images matching '${{ inputs.image_grep }}' for severities ${{ inputs.severities }}"
 
     - name: 📑 Check Total Issues
       if: (steps.scan.outputs.issues > 0) && (inputs.exit_on_error == 'true')
