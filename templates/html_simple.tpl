@@ -16,6 +16,8 @@
         <th>Package</th>
         <th>Vulnerability ID</th>
         <th>Severity</th>
+        <th>Title</th>
+        <th>Aqua Vulnerability Database</th>
         <th>Installed Version</th>
         <th>Fixed Version</th>
       </tr>
@@ -24,6 +26,10 @@
         <td class="pkg-name">{{ escapeXML .PkgName }}</td>
         <td>{{ escapeXML .VulnerabilityID }}</td>
         <td class="severity">{{ escapeXML .Vulnerability.Severity }}</td>
+        <td>{{ escapeXML .Title }}</td>
+        <td class="links">
+          <a href={{ escapeXML .PrimaryURL | printf "%q" }}>{{ escapeXML .PrimaryURL }}</a>
+        </td>
         <td class="pkg-version">{{ escapeXML .InstalledVersion }}</td>
         <td>{{ escapeXML .FixedVersion }}</td>
       </tr>
