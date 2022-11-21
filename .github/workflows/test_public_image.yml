@@ -1,0 +1,31 @@
+name: 📢 Test Public Image
+on: 
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "Public Image"
+        type: string
+        default: python:3.6
+        
+env:
+  GREEN: '\033[0;32m'
+  RED: '\033[0;31m'
+
+jobs:
+  python:
+    name: 👨‍👩‍👧‍👦 Public Image
+    runs-on: ubuntu-latest
+    outputs:
+      issues: ${{ steps.scan.outputs.issues }}
+    steps:     
+      - name: ⏬ Download Test Images
+        run: |
+          docker pull ${{ inputs.image }}
+
+      - name: ☢ Scan Images
+        id: scan
+        uses: spicyparrot/scan-images@trunk
+        with:
+          image_grep: ${{ inputs.image }}
+          severities: "CRITICAL,HIGH,MEDIUM"
+          exit_on_error: true
