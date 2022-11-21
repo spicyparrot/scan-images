@@ -6,6 +6,10 @@ on:
         description: "Public Image"
         type: string
         default: python:3.6
+      severities:
+        description: "Severities"
+        type: string
+        default: "CRITICAL,HIGH"
         
 env:
   GREEN: '\033[0;32m'
@@ -27,5 +31,5 @@ jobs:
         uses: spicyparrot/scan-images@trunk
         with:
           image_grep: ${{ inputs.image }}
-          severities: "CRITICAL,HIGH,MEDIUM"
+          severities: ${{ inputs.severities }}
           exit_on_error: true
