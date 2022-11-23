@@ -48,8 +48,6 @@ for IMAGE in $IMAGES; do
   trivy image --severity ${SEVERITIES} --security-checks ${SECURITY_CHECKS} -o ${TAB_FILE} ${IMAGE}
   ISSUES=$(cat ${TAB_FILE} |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
   TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
-  echo "" >> $GITHUB_STEP_SUMMARY
-  cat ${TAB_FILE}  >> $GITHUB_STEP_SUMMARY
 
   # Logging
   printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n${WHITE}"
