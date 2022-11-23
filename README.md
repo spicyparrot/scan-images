@@ -14,6 +14,10 @@ This can be used to flag security issues prior to pushing to an image registry, 
 - Generates a single report with the results of all images scanned
 - Parses out the total issues found to allow for error thresholding
 
+## Current Limitations
+
+- Only scanning for vulnerabilities currently `--security-checks vuln` this will be expanded out optional to all security checks in the future (vuln,config,secret,license)
+
 ## Requirements
 
 - Images to be scanned available in memory prior to scanning
