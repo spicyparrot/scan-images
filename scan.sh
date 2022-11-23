@@ -4,6 +4,9 @@
 IMAGE_GREP=$1
 SEVERITIES=$2
 
+# Variables  
+SECURITY_CHECKS="vuln"      #--security-checks (vuln,config,secret,license) (default [vuln,secret])
+
 # Colours
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -12,10 +15,11 @@ PURPLE='\033[0;35m'
 WHITE='\033[0m'
 
 # Files
+REPORTS_DIR=/tmp/trivy_reports
+HTML_REPORT=${REPORTS_DIR}/trivy_image_reports.html
 TAB_FILE=/tmp/table.txt
 FULL_FILE=/tmp/full.txt
 SLIM_FILE=/tmp/simple.txt
-HTML_REPORT=/tmp/trivy_image_reports.html
 TOTAL_FILE=/tmp/totals
 
 # Grep For Images
@@ -23,6 +27,7 @@ IMAGES=$(docker image list --format "{{.Repository}}:{{.Tag}}"|grep ${IMAGE_GREP
 printf "Images to scan:\n${PURPLE}$IMAGES\n${WHITE}"
 
 # Set initial cumulative count to TOTAL_ISSUES=0
+echo "# Security Vulnerabilities" >> $GITHUB_STEP_SUMMARY
 TOTAL_ISSUES=0
 
 # Scan each image
@@ -30,19 +35,21 @@ for IMAGE in $IMAGES; do
   printf "${YELLOW}Scanning ${IMAGE}...\n${WHITE}"
 
   # Full formatted report
-  trivy image --severity ${SEVERITIES} --format template --template "@templates/html.tpl" -o ${FULL_FILE} ${IMAGE}
+  trivy image --severity ${SEVERITIES} --security-checks ${SECURITY_CHECKS} --format template --template "@templates/html.tpl" -o ${FULL_FILE} ${IMAGE}
   echo "" >> ${HTML_REPORT}
   cat ${FULL_FILE}  >> ${HTML_REPORT}
 
   # Reduced report for GitHub Step Summary
-  trivy image --severity ${SEVERITIES} --format template --template "@templates/html_simple.tpl" -o ${SLIM_FILE} ${IMAGE}
+  trivy image --severity ${SEVERITIES} --security-checks ${SECURITY_CHECKS} --format template --template "@templates/html_simple.tpl" -o ${SLIM_FILE} ${IMAGE}
   echo "" >> $GITHUB_STEP_SUMMARY
-  cat ${SLIM_FILE}  >> $GITHUB_STEP_SUMMARY;
+  cat ${SLIM_FILE}  >> $GITHUB_STEP_SUMMARY
 
   # Add cumulative issues
-  trivy image --severity ${SEVERITIES} -o ${TAB_FILE} ${IMAGE}
+  trivy image --severity ${SEVERITIES} --security-checks ${SECURITY_CHECKS} -o ${TAB_FILE} ${IMAGE}
   ISSUES=$(cat ${TAB_FILE} |grep "Total:"| sed 's/^.*Total: //'|sed 's/ .*//'|xargs -n1|awk '{ sum += $1 } END { print sum }')
   TOTAL_ISSUES=$(expr ${TOTAL_ISSUES} + ${ISSUES})
+  echo "" >> $GITHUB_STEP_SUMMARY
+  cat ${TAB_FILE}  >> $GITHUB_STEP_SUMMARY
 
   # Logging
   printf "${PURPLE}Cumulative Issues = ${TOTAL_ISSUES}\n${WHITE}"

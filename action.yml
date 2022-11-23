@@ -60,7 +60,7 @@ runs:
       if: ${{ inputs.upload_reports }} == 'true'
       with:
         name: "Trivy Reports - ${{ inputs.image_grep }}"
-        path: /tmp/trivy_image_reports.html
+        path: /tmp/trivy_reports/*
 
     - name: ⚠ Add Warning Annotations
       if: steps.scan.outputs.issues > 0
